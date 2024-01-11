@@ -1,0 +1,140 @@
+@import url('https:fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    /* box-sizing: border-box; */
+    font-family: 'Poppins', sans-serif;
+}
+
+body{
+    background-color: #f9f9ff;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+html, body {
+    height: 100%;
+    min-height: 100%;
+}
+
+header{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* padding: 30px 100px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center; */
+    z-index: 10000;
+}
+
+@media (max-width: 991px) { /* This should match the collapsing point of the navbar, adjust if needed */
+    .navbar-toggler {
+        position: absolute;
+        right: 0; /* Adjust as needed */
+        top: 0; /* Adjust as needed */
+        z-index: 10000; /* Adjust as needed */
+    }
+
+}
+
+.logo{
+    font-size: 2em;
+    color: #359381;
+    pointer-events: none;
+    margin-right: 100px;
+}
+
+
+.navigation a{
+    text-decoration: none;
+    color: #359381;
+    padding: 6px 15px;
+    border-radius: 20px;
+    margin: 0 10px;
+
+}
+
+.navigation a:hover,
+.navigation a.active{
+    background-color: #359381;
+    color: #fff;
+}
+
+.parallax{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    z-index: 1;
+    overflow: hidden;
+
+}
+
+main{
+    position: relative;
+    z-index: 2;
+    background-color: #003329 ;
+}
+
+#text{
+    position: absolute;
+    font-size: 5em;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.parallax img{
+    position: absolute;
+    /* top: 0;
+    left: 0; */
+    bottom: 0;
+    width: 100%;
+    pointer-events: none;
+}
+
+/* .sec {
+    position: relative;
+    background-color: #003329;
+    padding: 100px;
+}
+
+.sec h2{
+    font-size: 3em;
+    color:#fff;
+    margin-bottom: 10px;
+}
+
+.sec p{
+    font-size: 1em;
+    color: #fff;
+    font-weight: 300;
+} */
+
+.prob-sol {
+    display: flex;
+}
+
+.btn-primary {
+    background-color:#359381 !important;
+    padding: 10px 40px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    transform: scale(1.1);
+}
+
+.btn-learn {
+    padding: 10px 40px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    transform: scale(1.1);
+  }
+
+footer {
+    width: 100%;
+    min-width: 100%;
+}
+

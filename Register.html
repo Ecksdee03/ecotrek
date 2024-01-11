@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrek Register</title>
+<style>
+   .imagecontainer{
+        position:relative;
+   }
+   #signupmodal{
+        position:absolute;
+        top: 40%;
+        left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.75;
+      z-index:0;
+      background-color: rgba(255, 255, 255, 0.75);
+      background-color: rgba(0, 0, 0, 0.75);
+    
+      /* z-index: 0; */
+        
+   }
+
+   #signupmodal h1 {
+    font-weight: bold;
+    font-style: italic;
+    opacity: 1;
+}
+
+.progress{
+    /* height:0.1rem; */
+    height: 0.4rem !important;
+    width:90%;
+    background-color: #f5f5f5;
+    border-radius: 0.4rem;
+}
+
+.bar{
+    width:0%;
+    height: 100%;
+    border-radius: inherit;
+    transition: 0.4s ease-in-out;
+}
+
+body{
+    background-image: url("images/background.png");
+    min-height: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+}
+input[type="text"] {
+
+border:none; /* Get rid of the browser's styling */
+border-bottom:1px solid rgb(214, 205, 205); /* Add your own border */
+
+}
+input[type="password"] {
+
+border:none; /* Get rid of the browser's styling */
+border-bottom:1px solid rgb(214, 205, 205); /* Add your own border */
+
+}
+
+.modal-content {
+    /* border: 1px solid red; */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    border:5px solid rgba(0,0,0,.2)!important;
+}
+
+   
+</style>
+<link rel="icon" href="images/logo/favicon-32x32.png" type="image/x-icon">
+</head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<body>
+    <!-- <div class="imagecontainer">
+        <img src="images/naturebackground.jpg" style="width:100%" class="img-fluid">
+    </div> -->
+   
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel" style="font-weight:bold;"><i>Error</i></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p style="font-family: 'Roboto', sans-serif;"><i>User already exists</i></p>
+            </div>
+            <div class="modal-footer justify-content-center">
+              <button type="button" class="btn btn-success" onclick="window.location.reload()">Okay</button>
+            </div>
+          </div>
+        </div>
+      </div>
+        <div class="container bg-light col-md-3 mt-5 pb-4 pt-2 col-sm-8 pt-5" id="signupmodal" style="border-radius:30px;">
+            <h1 class="fw-bold pl-3"><i>Sign up</i></h1>
+            <hr>
+            <div class="col-md-12">
+                <input type="text" name="namefield" id="name" class="form-control" placeholder="Name">
+                <br>
+            </div>
+            <div class="col-md-12">
+                <input type="text" name="emailfield" id="email" class="form-control" placeholder="Email" onkeypress="checkemail()">
+                <span id="emailerror" style="color:red;font-weight:bold; font-style:italic"></span> 
+                <br>
+            </div>
+            <div class="col-md-12">
+                <input type="text" name="addressfield" id="address" class="form-control" placeholder="Address">
+                <br>
+            </div>
+            <div class="col-md-12">
+                <input type="password" name="passwordfield" id="password" class="form-control" placeholder="Password" oninput="checkpassword()">
+                <br>
+            </div>
+            <div class="strengthMeter pl-4">
+                    <h5 style="font-weight:bold;"><i>Password Strength</i></h5>
+                    <div class="progress">
+                        <div class="bar"></div>
+                    </div>
+            </div>
+            <br>
+            <br>
+            <div class="col-md-12">
+                <button onclick = "processlogin()" id="signupbutton" class="btn btn-success">Sign up </button>
+                <a href="Login.html" class="btn btn-danger">Cancel </a>
+                <br>
+            </div>
+            
+                
+              
+           
+        </div>
+     
+  
+    
+    
+</body>
+
+
+
+
+<Script>
+    
+    setInterval(checktag, 1000);
+
+    function checktag(){
+        let name = document.getElementById("name").value;
+        let password = document.getElementById("password").value;
+        let email = document.getElementById("email").value;
+        let address = document.getElementById("address").value;
+        let error = document.getElementById("emailerror");
+        // console.log(name.value);
+        if(error.innerText == "Invalid email address" ||  name ==""  || email =="" || address == "" || password == ""){
+            document.getElementById("signupbutton").disabled = true;
+        }
+        else{
+            document.getElementById("signupbutton").disabled = false;
+        }
+    }
+    
+    function processlogin() {
+           
+            const url = 'api/Register_process.php'
+            var name = document.getElementById("name").value;
+            var password = document.getElementById("password").value;
+            var email = document.getElementById("email").value;
+            var address = document.getElementById("address").value;
+           
+                axios.get(url, {
+                    params: {
+                        name : name,
+                        password: password,
+                        email: email,
+                        address: address
+                    }
+            })
+            .then(response =>  {
+                console.log(response.data)
+                if(response.data == "User already exist"){
+                    $(document).ready(function() {
+                     $("#exampleModal").modal("show");
+                     });
+                }
+                else{
+                    window.location.href = "Login.html";
+                }
+                
+                // const weather = response.data.weather[0].description
+                // document.getElementById("axios").innerText = weather;
+            })
+            .catch(error => {
+                console.log(error.message)
+                // document.getElementById("axios").innerText = error.message;
+            });   
+            
+           
+        }
+
+    function checkemail(){
+        var email = document.getElementById("email").value;
+        var VR = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if(email.match(VR)){
+            document.getElementById("emailerror").innerText = "";
+        }
+        else{
+            document.getElementById("emailerror").innerText = "Invalid email address";
+        }
+    }
+
+    function checkpassword(){
+        var password_check = document.getElementsByClassName("strengthMeter")[0];
+        var passwordval = document.getElementById("password").value;
+        console.log(passwordval);
+        var progressbar = document.getElementsByClassName("bar")[0];
+        let strength = 0;
+        if(strength<5){
+            if (passwordval.match(/(?=.*[A-Z])/)) { 
+                    strength += 1;
+            }
+
+         if(passwordval.match(/(?=.*[a-z])/)){
+           
+            strength +=1;
+        }
+         if(passwordval.match(/(?=.*[0-9])/)){
+           
+            strength +=1;
+        }
+         if (passwordval.match(/(?=.*[`!@#$%^&*])/)) {
+           
+             strength += 1;
+            }
+
+         if(passwordval.length>=9){
+           
+            strength +=1;
+        }
+        }
+        console.log(strength);
+        if(strength==0){
+            let newstrength =0; 
+            progressbar.style.width = `${newstrength}%`;
+            progressbar.style.backgroundColor = '';
+        }
+        if(strength ==1){
+                let newstrength  = (strength/5)*100;
+                progressbar.style.width = `${newstrength}%`;
+                progressbar.style.backgroundColor = 'red';
+        }
+        if(strength ==2){
+                let newstrength  = (strength/5)*100;
+                progressbar.style.width = `${newstrength}%`;
+                progressbar.style.backgroundColor = 'orangered'; 
+        }
+        if(strength ==3){
+                let newstrength  = (strength/5)*100;
+                progressbar.style.width = `${newstrength}%`;
+                progressbar.style.backgroundColor = 'gold'; 
+        }
+        if(strength ==4){
+                let newstrength  = (strength/5)*100;
+                progressbar.style.width = `${newstrength}%`;
+                progressbar.style.backgroundColor = 'deepskyblue'; 
+        }
+        if(strength ==5){
+                let newstrength  = (strength/5)*100;
+                progressbar.style.width = `${newstrength}%`;
+                progressbar.style.backgroundColor = 'green'; 
+        }
+
+        // switch(strength){
+        //     case 1:
+        //             progressbar.style.width = `${newstrength}%`;
+        //             progressbar.style.backgroundColor = 'red'; 
+        //             break;
+        //     case 2:
+        //             progressbar.style.width = `${newstrength}%`;
+        //             progressbar.style.backgroundColor = 'orangered'; 
+        //             break; 
+        //     case 3:
+        //             progressbar.style.width = `${newstrength}%`;
+        //             progressbar.style.backgroundColor = 'gold'; 
+        //             break;
+
+        //     case 4:
+        //             progressbar.style.width = `${newstrength}%`;
+        //             progressbar.style.backgroundColor = 'deepskyblue'; 
+        //             break;
+        //     case 5:
+        //             progressbar.style.width = `${newstrength}%`;
+        //             progressbar.style.backgroundColor = 'green'; 
+        //             break;
+        // }
+      
+
+    }
+
+
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+</html>

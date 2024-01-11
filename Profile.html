@@ -1,0 +1,728 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrek Profile</title>
+<style>
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 1000;
+    padding-bottom: 10rem;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    /*background-image: linear-gradient(150deg, #c5d9c5 48%, #F4F4F4 50%);*/
+
+    background-image: url("images/background.png"); 
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    overflow-y: auto;
+}
+
+.rounded {
+    border-radius: 50%;
+}
+.custom {
+    max-width: 80%;
+    min-height: 500px;
+}
+
+.rounded-container {
+    border-radius: 0px;
+    overflow: hidden;
+}
+
+canvas {
+    max-width: 100%;
+    height: 200px !important;
+}
+
+div.scroll {
+    background-color: #fed9ff;
+    /* width: 550px; */
+    height: 460px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-align: center;
+    padding: 20px;
+}
+
+.but {
+    background-color: #ddd;
+    border: none;
+    color: black;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 50px;
+}
+
+img {
+    border: 1px solid #F0F8FF;
+}
+
+input[type="text"] {
+    border-radius: 25px;
+}
+
+.custom-button {
+    border: none;
+    color: black;
+    background-color: white;
+    outline: none;
+}
+
+.inputcontainer {
+    position: relative;
+}
+
+.inputcontainer i {
+    position: absolute;
+    top: 50%;
+    left: 30px;
+    transform: translateY(-50%);
+    width: 20px;
+    height: auto;
+}
+
+div {
+    border-radius: 15px;
+}
+
+.search {
+    background-color: #359381;
+    color: #fff;
+    border-radius: 30px;
+    border: 1px solid #359381;
+}
+
+header{
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px 100px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    z-index: 100;
+}
+
+.logo{
+    font-size: 2em;
+    color: #359381;
+    pointer-events: none;
+    margin-right: 100px;
+}
+
+
+.navigation a{
+    text-decoration: none;
+    color: #359381;
+    padding: 6px 15px;
+    border-radius: 20px;
+    margin: 0 10px;
+
+}
+
+
+.navigation a:hover{
+    background-color: #359381;
+    color: #fff !important;
+}
+
+
+@media (max-width: 768px) {
+  .search {
+    margin-top: 48px;
+  }
+}
+
+@media (max-width: 991px) { /* This should match the collapsing point of the navbar, adjust if needed */
+    .navbar-toggler {
+        position: absolute;
+        right: 0; 
+        top: 0; 
+        z-index: 10000; 
+    }
+
+}
+
+
+
+</style>
+<script>
+    if(sessionStorage.getItem('profileID') == null){
+      window.location.href = 'login.html';
+    }else{
+      let userprofile = sessionStorage.getItem('profileID');
+    }
+  </script>
+  
+</head>
+
+    
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!-- Vue  -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/ScrollMagic.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/plugins/animation.gsap.min.js"></script><script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="icon" href="images/logo/favicon-32x32.png" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="main.css">
+
+
+
+
+<body>
+    <body onload="loadprofile()" style="background-color: #F5F5F5">
+        <h2 class="logo">EcoTrek</h2>
+        <nav class="navigation navbar navbar-expand-lg navbar-light px-5">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="index.html" style="color: #359381;">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="base.html" style="color: #359381;">Map</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active text-white" style="color:white !important;" href="#">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="store.html" style="color: #359381;">Store</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="leaderboard.html" style="color: #359381;">Leaderboard</a>
+            </li>
+            </ul>
+        </div>
+        </nav>
+      
+
+        
+      <br>
+          <br>
+          <br>
+          <br>
+          <br>
+    <div class="modal fade" id="exampleModalDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog invalid-credential-modal" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel" style="font-weight:bold;"><i>Sucessfully Deleted Friend</i></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p style="font-family: 'Roboto', sans-serif;"><i>Return to Profile</i></p>
+            </div>
+            <div class="modal-footer justify-content-center">
+              <button type="button" class="btn btn-success" onclick="window.location.reload()">Okay</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog invalid-credential-modal" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel" style="font-weight:bold;"><i>Sucessfully Added Friend</i></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p style="font-family: 'Roboto', sans-serif;"><i>Return to Profile</i></p>
+            </div>
+            <div class="modal-footer justify-content-center">
+              <button type="button" class="btn btn-success" onclick="window.location.reload()">Okay</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="background-color: rgba(245, 245, 245, 0.7);" class="mx-auto col-12 col-md-8 p-3">
+        <div class="row">
+            <div class="col-lg-7 col-md-7 col-sm-12 mt-2 text-center text-md-end" style="text-align: end; color: #359381;">
+                <strong> Search  </strong>
+                    <input type="text" class="pl-2 ml-3 ml-md-0 pl-sm-4" placeholder=" Search Email" id="friendemail">
+            </div>
+            <div class="col-lg-5 col-md-5 pt-1 pl-0 text-center text-md-left ml-auto"> <!-- Added ml-auto -->
+                <button class="search pl-3 pr-3 pt-2 pb-2 ml-0" onclick="searchprofile()">Search Profile</button>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="mx-auto custom mt-5">
+        <div class="col-12 col-sm-10 mx-auto p-5" style="background-color: rgba(245, 245, 245, 0.7);">
+            <div class="row">
+                <div class="col-12 col-md-3 text-center">
+                    <img src="images/profilepic2.jpg" class="rounded-circle img-fluid" style="height: 190px; width: 190px" alt="Profile Picture" id="profilepicture">
+                </div>
+                <div class="col pl-5">
+                    <div class="row">
+                        <div class="col-8 pl-2">
+                            <h1 id="name"><strong></strong></h1>
+                        </div>
+                        <div class="col pt-3">
+                            <button class="but" id="edit" style="background-color: #359381; color:white;" onclick="editprofile()">Edit Profile</button>
+                            <button class="but" onclick="logout()">Logout</button>
+                            <button class="btn btn-success mr-1 mt-2 pl-4 pr-4 text-center" style="border-radius: 100px; display: none;" id="addbtn">Add Friend</button>
+                        </div>
+                    </div>
+                    <span><i id="biography"></i></h1>
+                    <hr>
+                    <i class="fi fi-sr-envelope"></i>
+                    <span class="pl-2" id="email"></span>
+                    <br>
+                    <i class="fi fi-sr-map-pin" style="font-size: 19px;"></i>
+                    <span class="pl-2" id="address"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid pt-5">
+            <div class="row mb-3 justify-content-center" id="pts">
+              <div class="col-md-5 p-4 mx-3 col-sm-12" id="canva" style="background-color: rgba(245, 245, 245, 0.7);">
+                <h4 class="mb-3"><strong>Points: <strong id="points"></strong></strong></h4>
+                <hr>
+                <div class="d-flex justify-content-between">
+                  <button class="btn btn-outline-secondary linebut" id="line" onclick="tog(this.id)">
+                    <i class="fas fa-chart-line"></i> Line
+                  </button>
+                  <button class="btn btn-outline-secondary barbut" id="bar" style="background-color: white;" onclick="tog(this.id)">
+                    <i class="fas fa-bars"></i> Bar
+                  </button>
+                </div>
+                <canvas id="myChart" class="mt-5"></canvas>
+              </div>
+          
+              <div class="col-md-5 scroll col-sm-12" style="background-color: rgba(245, 245, 245, 0.7);" id="friend">
+                <div class="row mb-3">
+                  <div class="col-5 pt-1">
+                    <h4><strong>Friends (<strong id="nooffrens"></strong>)</strong></h4>
+                  </div>
+                  <div class="col-7">
+                    <input type="text" name="friend" id="nameoffriend" oninput="findspecificfren(event)" class="form-control custominput" placeholder="Search Friend">
+                  </div>
+                </div>
+                <hr>
+                <div id="friendlist"></div>
+              </div>
+            </div>
+          </div>
+          
+          
+    <div id="joke"></div>
+</body>
+
+<script>
+    function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+    function logout(){
+        sessionStorage.clear();
+        window.location.href = 'login.html';
+    }
+
+     var myChart;
+     function loadprofile(){
+        console.log(sessionStorage.getItem("profileID"));
+        var email = sessionStorage.getItem("email");
+        const url = 'api/Profile_process.php'
+        axios.get(url, {
+            params: {
+                email: email,
+                }
+                })
+                .then(response =>  {
+                    var dataContainer = document.getElementById('checkdata');
+                    name = response.data.name;
+                    profileURL = response.data.profileURL;
+                    points = response.data.points;
+                    address = response.data.address;
+                    biography = response.data.biography;
+                    pt = response.data.pt;
+                    sessionStorage.setItem('pt', JSON.stringify(response.data.pt));
+                    var friends = response.data.friend;
+                    document.getElementById("name").innerText = name;
+                    document.getElementById("biography").innerHTML = biography;
+                    document.getElementById("email").innerText = email;
+                    document.getElementById("address").innerText = address;
+                    document.getElementById("points").innerText = points;
+                    document.getElementById("profilepicture").src = profileURL;
+                    var content = '';
+                    var fr = document.getElementById('friendlist');
+                    var nooffriends = response.data.nooffriends;
+                    for(friend of friends){
+                        profilepic = friend.profilepic;
+                        name = friend.name;
+                        id = friend.id;
+                        content += `
+                                <div class="row">
+                                    <div class="col-5 mr-5 ml-3" style="display: flex; align-items: center;">
+                                        <img src="${profilepic}" class="rounded-circle img-fluid ml-0 pl-0" style="height:60px; width:60px" alt="Profile Picture">
+                                        <span class="ml-2">${name}</span>
+                                    </div>
+                                    <div class="col">
+                                        <button class="but" id=${id} onclick="deletefriend(${id})">Unfriend</button>
+                                    </div>
+                                </div>
+                                <hr>
+                            `;
+                           
+
+                    }
+                    
+                    fr.innerHTML = content;
+                    document.getElementById("nooffrens").innerText = nooffriends;
+                    var put = JSON.parse(sessionStorage.getItem('pt'));
+        var data = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        points: put.map(item => parseFloat(item[0]))};
+        var toggle = "bar";
+        var ctx = document.getElementById('myChart').getContext('2d');
+         myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Points Earned Each Month',
+                    data: data.points,
+                    backgroundColor: [
+                    'rgba(255, 9, 132, 0.4)',
+                    'rgba(54, 162, 235, 0.4)',
+                    'rgba(255, 206, 86, 0.4)',
+                    'rgba(75, 192, 192, 0.4)',
+                    'rgba(153, 102, 255, 0.4)',
+                    'rgba(255, 159, 64, 0.4)',
+                    'rgba(255, 9, 132, 0.4)',
+                    'rgba(54, 162, 235, 0.4)',
+                    'rgba(255, 206, 86, 0.4)',
+                    'rgba(75, 192, 192, 0.4)',
+                    'rgba(153, 102, 255, 0.4)',
+                    'rgba(255, 159, 64, 0.4)'                
+                
+                ],
+                borderColor: [
+                    'rgba(255, 9, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 9, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'                
+                
+                ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                        title: {
+                            display: true,
+                            text: 'Points Earned Each Month',
+                            position: 'bottom' // Position the title above the chart
+                        }
+                    }
+            }
+        });
+                    
+                    // location.reload();
+                })
+                
+                }
+       
+
+
+  function tog(id){
+    if(id=="line"){
+        myChart.config.type = 'line';
+        var line = document.getElementsByClassName("linebut")[0];
+        line.style.borderBottom = "5px solid black";
+        var bar = document.getElementsByClassName("barbut")[0];
+        bar.style.borderBottom = "none";
+    }
+    else if(id =="bar"){
+        myChart.config.type = 'bar';
+        var bar = document.getElementsByClassName("barbut")[0];
+        bar.style.borderBottom = "2px solid black";
+        var line = document.getElementsByClassName("linebut")[0];
+        line.style.borderBottom = "none";
+    }
+    myChart.update(); 
+    
+}
+
+
+// This is to search for friend in the friend list
+function findspecificfren(event){
+    var tbval = event.target.value;
+    var url = "api/Friend_process.php";
+    var profileID = sessionStorage.getItem("profileID");
+    axios.get(url, {
+                    params: {
+                        tbval: tbval,
+                        profileID: profileID,
+                    }
+            })
+            .then(response =>  {
+                var content = '';
+                var fr = document.getElementById('friendlist');
+                var nooffriends = response.data;
+                console.log(nooffriends);
+                for(friend in nooffriends.friends){
+                    profilepic = nooffriends.friends[friend].pictureURL;
+                    name = nooffriends.friends[friend].nameoffriend;
+                    id = nooffriends.friends[friend].id;
+                    content += `
+                            <div class="row">
+                                <div class="col-5 me-5 ms-3" style="display: flex; align-items: center;">
+                                    <img src="${profilepic}" class="rounded-circle img-fluid ms-0 ps-0" style="height:60px; width:60px" alt="Profile Picture">
+                                    <span class="ml-2">${name}</span>
+                                </div>
+                                <div class="col">
+                                    <button class="but" id="${id}" onclick = "deletefriend(${id})">Unfriend</button>
+                                </div>
+                            </div>
+                            <hr>
+                        `;
+                    //     document.getElementById(id).addEventListener('click', function() {
+                    //     deletefriend(id);
+                    // });
+                        
+                
+
+                }
+
+                fr.innerHTML = content;
+               
+            })
+            .catch(error => {
+             
+            });   
+
+}
+
+function searchprofile(){
+        var friendemail = document.getElementById("friendemail").value;
+        const url = 'api/UserProfileSearch.php';
+        axios.get(url, {
+            params: {
+                email: friendemail,
+                }
+                })
+                .then(response =>  {
+                    var pID = sessionStorage.getItem("profileID");
+                    var dataContainer = document.getElementById('checkdata');
+                    name = response.data.name;
+                    profileURL = response.data.profileURL;
+                    points = response.data.points;
+                    address = response.data.address;
+                    biography = response.data.biography;         
+                    profileID = response.data.profileID;
+                    var friends = response.data.friend;
+                    document.getElementById("name").innerText = name;
+                    document.getElementById("biography").innerHTML = biography;
+                    document.getElementById("email").innerText = friendemail;
+                    document.getElementById("address").innerText = address;
+                    document.getElementById("points").innerText = points;
+                    document.getElementById("profilepicture").src = profileURL;
+                    document.getElementById("edit").style.display ="none";
+                    console.log(pID);
+                    console.log("hello")
+                    console.log(profileID);
+                    if(pID != profileID){
+                        document.getElementById("addbtn").style.display ="block";
+                        document.getElementById("addbtn").id = profileID;
+                        console.log( document.getElementById("addbtn"))
+                        document.getElementById(profileID).addEventListener('click', function() {
+                        addfriend(profileID);
+                    });
+                    }
+                    document.getElementById("friend").style = "display:none;";
+                    document.getElementById("pts").style = "display:none;";
+             
+                                
+                            })
+                            .catch(error => {
+                                
+                            });   
+                            }
+
+function addfriend(id){
+    console.log("This function is called");
+    var url = "api/addfriend.php";
+    var id = id;
+    var profileID = sessionStorage.getItem("profileID");
+    console.log(profileID);
+    axios.get(url, {
+                    params: {
+                        id: id,
+                        profileID: profileID,
+                    }
+            })
+            .then(response =>  {
+                $(document).ready(function() {
+                     $("#exampleModal").modal("show");
+                     });
+
+               
+            })
+            .catch(error => {
+           
+              
+            });   
+
+}
+
+function deletefriend(id){
+    // console.log("it is working");
+    var profileID = sessionStorage.getItem("profileID");
+    var id = id;
+    var url = "api/deletefriend.php";
+    axios.get(url, {
+                    params: {
+                        id: id,
+                        profileID: profileID,
+                    }
+            })
+            .then(response =>  {
+                $(document).ready(function() {
+                     $("#exampleModalDelete").modal("show");
+                     });
+
+
+               
+            })
+            .catch(error => {
+                console.log(response.data);
+           
+              
+            });   
+
+}
+
+function editprofile(){
+        
+        var ele = document.getElementById("name");
+        var input = document.createElement("input");
+        input.type = "text"; 
+        input.id = "name"; 
+        input.value = ele.textContent;
+        ele.parentNode.replaceChild(input, ele);
+        var elebio = document.getElementById("biography");
+        var input = document.createElement("input");
+        input.type = "text"; 
+        input.id = "biography"; 
+        input.value = elebio.textContent;
+        elebio.parentNode.replaceChild(input, elebio);
+        var eleemail = document.getElementById("email");
+        var input = document.createElement("input");
+        input.type = "text"; 
+        input.id = "email"; 
+        input.value = eleemail.textContent;
+        eleemail.parentNode.replaceChild(input, eleemail);
+        var eleaddress = document.getElementById("address");
+        var input = document.createElement("input");
+        input.type = "text"; 
+        input.id = "address"; 
+        input.value = eleaddress.textContent;
+        eleaddress.parentNode.replaceChild(input, eleaddress);
+        var editbtn = document.getElementById("edit");
+        editbtn.id = "save";
+        editbtn.innerHTML = "Save Profile";
+        editbtn.onclick = function() {
+        saveProfile(name,biography,email, address);
+        };
+
+
+}
+
+function saveProfile(name,biography,email,address){
+    console.log(name);
+    name = document.getElementById("name").value;
+    biography = document.getElementById("biography").value;
+    email = document.getElementById("email").value;
+    address = document.getElementById("address").value;
+    var url = "api/update_user.php";
+    var profileID = sessionStorage.getItem("profileID");
+    axios.get(url, {
+                    params: {
+                        profileID: profileID,
+                        name: name,
+                        biography: biography,
+                        email: email,
+                        address: address
+                    }
+            })
+            .then(response =>  {
+                // $(document).ready(function() {
+                //      $("#exampleModalDelete").modal("show");
+                //      });
+                sessionStorage.setItem("email", email);
+                location.reload();
+
+
+               
+            })
+            .catch(error => {
+                console.log(response.data);
+           
+              
+            });   
+}
+
+
+
+       
+        
+
+
+     
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</html>

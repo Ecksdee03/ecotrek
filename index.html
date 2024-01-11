@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrek</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Import Bootstrap Library -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">    
+    <!-- Import Axios Library -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- Import Vue Library -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/ScrollTrigger.min.js"></script>
+
+    <!-- ScrollMagic -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/ScrollMagic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/plugins/animation.gsap.min.js"></script>
+
+    <link rel="icon" href="images/logo/favicon-32x32.png" type="image/x-icon">
+    <style>
+      /* Parallax */        
+      /* Initially hide the text and button */
+      .card-body {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center; 
+        transition: opacity 0.5s ease;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .default-text {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        transition: opacity 0.5s ease;
+        color: #fff; 
+      }
+
+      .hover-text {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        transform: translateY(20px); 
+        pointer-events: none;
+        color: #fff; 
+      }
+      
+      .card {
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* When hovering over the card, hide the default text and show the hover text */
+      .card:hover .default-text {
+        opacity: 0;
+      }
+      
+      .card:hover .hover-text {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }  
+
+      .image-box {
+        /* width: 100%; */
+        height: 70vh;
+        object-fit: cover;
+        background-size: cover;
+        background-position: center;
+        transition: transform 0.5s ease;
+      }
+      
+      .card:hover .image-box {
+        transform: scale(1.1);
+      }
+      
+      .card:hover {
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      
+      .card-group {
+        display: flex;
+      }
+      nav{
+        position: relative;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+      }
+      body {
+  transition: transform 0.5s ease;
+}
+
+.page-transition {
+  transform: translateX(100%);
+}
+
+    </style>
+</head>
+
+<body>
+    
+    <header>
+      <h2 class="logo">EcoTrek</h2>
+      <nav class="navigation navbar navbar-expand-lg navbar-light px-5">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item">
+              <a class="nav-link active text-white" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="base.html">Map</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="Profile.html">Profile</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="store.html">Store</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="leaderboard.html">Leaderboard</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+  
+    </header>
+
+    <section class="parallax">
+        <img src="images/hill1.png" id="hill1">
+        <img src="images/hill2.png" id="hill2">
+        <img src="images/hill3.png" id="hill3">
+        <img src="images/hill4.png" id="hill4">
+        <img src="images/hill5.png" id="hill5">
+        <img src="images/tree.png" id="tree">
+        <h2 id="text">Welcome to EcoTrek</h2>
+        <img src="images/leaf.png" id="leaf">
+        <img src="images/plant.png" id="plant">
+    </section>
+
+    <main class="next">
+    
+        <div class="container-fluid">
+    
+              <div class="row align-items-md-stretch mb-5 text-center">
+                <div class="col-md-12 ">
+                  <div class="h-100 p-5 text-white bg-dark rounded-3">
+                    <h2>Why Carbon Tracking Matters</h2>
+                    <p>Our planet is facing a climate crisis, largely driven by carbon emissions. Tracking your carbon footprint is the first step towards making a change.
+                    </p>
+                    <a href="#about-us">
+                      <button class="btn btn-learn btn-outline-light" type="button">Learn more</button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+        
+            <div class="prob-sol row align-items-md-stretch text-center px-5">
+              <div class="col-md-6 col-sm-12 my-3">
+                <div class=" h-100 p-5 text-dark bg-green-100 rounded-3">
+                  <h2>The Problem</h2>
+                  <p class="mt-4 text-dark">
+                    Every year, millions of tons of CO2 are released into the atmosphere, contributing to global warming and climate change. Reducing our carbon footprint is essential in slowing down these effects.
+                </p>              
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-12 my-3">
+                <div class="h-100 p-5 text-dark bg-green-200 rounded-3">
+                  <h2>Our Solution</h2>
+                  <p class="mt-4 text-dark">
+                    EcoTrek helps you track and manage your carbon emissions, providing actionable insights and tips to live a more sustainable lifestyle and make a real impact.
+                </p>              
+                </div>
+              </div>
+            </div>
+        </div>
+        
+        <div class="container-fluid px-4 py-5 text-center" id="feature-cards">
+            <h2 class="pb-2 border-bottom text-white">Features</h2>
+            <div class="row card-group g-4 py-5 row-cols-1 row-cols-lg-3">
+    
+              <div class="col md-4 sm-12">
+                <div class="card h-100">
+                  <div class="image-box" style="background-image: url('images/features/product-store.jpg');">
+                  </div>
+                    <div class="card-body">
+                      <div class="default-text">
+                        <h3 class="card-title">Product Store</h3>
+                      </div>
+                      <div class="hover-text">
+                        <p class="card-text">Introduce a points system for sustainable actions, allowing users to redeem points for eco-friendly product discounts, reinforcing sustainable living.</p>
+                        <a href="store.html" class="btn btn-primary">Try now</a>
+                      </div>
+                    </div>
+                </div>
+              </div>
+    
+              <div class="col md-4 sm-12">
+                <div class="card h-100">
+                  <div class="image-box" style="background-image: url('images/features/leaderboard.jpg');">
+                  </div>
+                    <div class="card-body">
+                        <div class="default-text">
+                          <h3 class="card-title">Leaderboard</h3>
+                        </div>
+                        <div class="hover-text">
+                          <p class="card-text">Feature a leaderboard and challenges, incentivizing users to consistently adopt sustainable practices through friendly competition.</p>
+                          <a href="leaderboard.html" class="btn btn-primary">Try now</a>
+                        </div>
+                    </div>
+                </div>
+              </div>
+    
+              <div class="col md-4 sm-12">
+                <div class="card h-100">
+                  <div class="image-box" style="background-image: url('images/features/journey-planning.jpg');">                   
+                  </div>
+                    <div class="card-body">
+                      <div class="default-text">
+                        <h3 class="card-title">Journey Planning</h3>
+                      </div>
+                      <div class="hover-text">
+                        <p class="card-text">Develop a journey planner that suggests eco-friendly routes and provides carbon footprint estimates for travel options, guiding users towards environmentally responsible decisions.
+                        </p>
+                        <a href="base.html" class="btn btn-primary">Try now</a>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    
+    
+          <div class="container-fluid" id="about-us">
+            <div class="row">
+                <div class="col-md-7 col-sm-12 d-flex align-items-center justify-content-center">
+                    <img style="width: 50%;" src="images/logo/logo-no-background.png" class="about-us-image">
+                </div>
+                <div class="col-md-5 col-sm-12">  
+                    <h1 class="font-weight-light text-white">
+                        About Us
+                    </h1>
+                    <p class="mt-4 text-white">This web application is aimed at addressing the pressing need for sustainable travel and to promote a greener future. The application aims to ensure that users can make more informed and environmentally conscious decisions when traveling, and reduce their overall carbon footprint. Our application helps to track carbon footprint and incentivize Singaporeans to engage in eco-friendly initiatives, with an attractive reward system. With the looming issue of climate change, this project seeks to raise awareness and highlight the importance and significance of every individual’s action and impact.            
+                    </p>
+                </div>
+            </div>
+          </div>
+        
+        <br><br><br><br><br>
+        <!-- Footer -->
+        <footer class="text-center bg-green-100" id="footer" style=" color: black;">
+              <h2 class="text-2xl">Ecotrek</h2>
+              <p>2023 Ecotrek. All rights reserved.</p>
+        </footer>        
+    
+    </main>
+
+    <script>
+    
+      // Scroll Triggers
+    gsap.from('.navbar', { duration: 1, y: '-100%', ease: 'bounce'})
+
+    let tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: ".prob-sol", 
+      start: "top center", 
+      end: "bottom bottom", 
+      toggleActions: "play none none none", 
+    }
+    });
+
+  tl.from(".prob-sol", {
+    opacity: 0,
+    x: -50,
+    duration: 1,
+    stagger: 0.3,
+  }, "-=0.8") 
+  .from(".card", {
+    opacity: 0,
+    y: 50,
+    duration: 1,
+    stagger: 0.3,
+  }, "-=0.6") 
+  .from(".about-us-image", {
+    duration: 1,
+    opacity: 0,
+    x: -100,
+  }, "-=0.6");
+
+  window.addEventListener('resize', () => {
+    ScrollTrigger.refresh();
+  });
+  document.querySelectorAll('a').forEach((link) => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const href = link.getAttribute('href');
+    document.body.classList.add('page-transition');
+
+    setTimeout(() => {
+      window.location.href = href;
+    }, 500); // Adjust the time to match your CSS transition duration
+  });
+});
+
+
+  </script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" 
+  integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" 
+  crossorigin="anonymous"></script>
+
+
+  <!-- <script src="animations.js"></script> -->
+  <script>
+    window.addEventListener('resize', () => {
+      location.reload();
+    });
+    let text = document.getElementById('text');
+    let leaf = document.getElementById('leaf');
+    let hill1 = document.getElementById('hill1');
+    let hill4 = document.getElementById('hill4');
+    let hill5 = document.getElementById('hill5');
+    let sec = document.querySelector('.next'); // Get the reference to the next section
+    let maxScrollValue = sec.offsetTop;
+    let width = window.innerWidth;
+    if (width < 576){
+      text.style.color = "#359381";
+    }else{
+      text.style.color = "white";
+    }
+
+
+
+    window.addEventListener('scroll', () => {
+    let value = window.scrollY;
+    let screenWidth = window.innerWidth;
+    let parallaxIntensity;
+
+    
+    if (screenWidth < 576) {
+        // Extra small devices
+        parallaxIntensity = 0;
+    } else if (screenWidth >= 576 && screenWidth < 768) {
+        // Small devices
+        parallaxIntensity = 0;
+    } else if (screenWidth >= 768 && screenWidth < 992) {
+        // Medium devices
+        parallaxIntensity = 1;
+    } else if (screenWidth >= 992 && screenWidth < 1200) {
+        // Large devices
+        parallaxIntensity = 1.5;
+    } else if (screenWidth >= 1200 && screenWidth < 1400) {
+        // Extra large devices
+        parallaxIntensity = 2.0;
+    } else {
+        // Extra extra large devices
+        parallaxIntensity = 2.5;
+    }
+
+    if (value <= maxScrollValue && screenWidth > 991) {
+        text.style.marginTop = (value * parallaxIntensity) + 'px';
+        leaf.style.top = (value * -parallaxIntensity) + 'px';
+        leaf.style.left = (value * parallaxIntensity) + 'px';
+        hill5.style.left = (value * parallaxIntensity) + 'px';
+        hill4.style.left = (value * -parallaxIntensity) + 'px';
+        hill1.style.top = (value * parallaxIntensity) + 'px';
+    }
+
+});
+  </script>
+  
+</body>
+
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrek Leaderboard</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!-- Vue  -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/ScrollMagic.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/plugins/animation.gsap.min.js"></script>
+  <style>
+    /* Add some CSS to improve the look of the page */
+    div.scroll {
+        /* width: 550px; */
+        height: 300px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        text-align: center;
+        padding: 20px;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      background-image: url("images/background.png"); 
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: center;
+      background-size: cover;
+      overflow-y: auto;
+    }
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+      transition: 0.3s;
+    }
+    .card:hover {
+      box-shadow: 0 8px 16px 0 rgba(7, 5, 5, 0.2);
+    }
+
+  </style>
+    <style>
+      .gold{
+        background-color: gold !important;
+      }
+
+      .silver{
+        background-color: silver !important;
+      }
+
+      .bronze{
+        background-color: #cd7f32 !important;
+      }
+
+      .container-fluid {
+        margin-top: 10px; /* Adjust the margin-top as needed */
+      }
+      .navbar-toggler-icon {
+        color: black !important;
+      }
+
+      #national {
+        background-color: #fff;
+        border-radius: 0 0 12px 12px;
+        padding: 15px 15px 20px;
+        display: grid;
+        row-gap: 8px;
+      }
+
+      #friends {
+        background-color: #fff;
+        border-radius: 0 0 12px 12px;
+        padding: 15px 15px 20px;
+        display: grid;
+        row-gap: 8px;
+      }
+
+      /* table tr td, table tr th{
+          background-color: rgba(245, 245, 245, 0.7) !important;
+      } */
+
+      tr {
+        transition: transform 0.3s ease;
+
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+        
+        align-items: center;
+        padding: 10px 30px 10px 10px;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 5px 7px -1px rgba(51, 51, 51, 0.23);
+        cursor: pointer;
+        transition: transform .25s cubic-bezier(.7,.98,.86,.98), box-shadow .25s cubic-bezier(.7,.98,.86,.98);
+        background-color: #fff;
+      }
+
+      tr:hover {
+        transform: scale(1.2);
+        box-shadow: 0 9px 47px 11px rgba(51, 51, 51, 0.18);        
+        z-index: 1;
+      }
+
+
+    </style>
+    <script>
+      if(sessionStorage.getItem('profileID') == null){
+        window.location.href = 'login.html';
+      }else{
+        let current_user = sessionStorage.getItem('profileID');
+      }
+    </script>
+    <link rel="icon" href="images/logo/favicon-32x32.png" type="image/x-icon">
+
+</head>
+<body>
+    <h2 class="logo">EcoTrek</h2>
+    <nav class="navigation navbar navbar-expand-lg navbar-light px-5">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="base.html">Map</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="Profile.html">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="store.html">Store</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link active text-white" href="#">Leaderboard</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4 col-sm-12"></div>
+          <div class="col-md-4 col-sm-12">
+            <div class="card" style="width: 100%; margin-right: 25px; margin-top: 25px; background-color: rgba(245, 245, 245, 0.7); padding-left: 20px; padding-right: 20px;">
+              <h1 class="text-center" style="color: #359381;">Prizes</h1>
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>National Rank</th>
+                    <th>Prize</th>
+                  </tr>
+                </thead>
+                <tbody id="prizes_list">
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-12"></div>
+          <div class="col-md-3 col-sm-12"></div>
+
+          <div class="col-md-6 col-sm-12">
+            <div class="card" style="width: 100%; margin-right: 25px; margin-top: 25px; background-color: rgba(245, 245, 245, 0.7); padding-left: 20px; padding-right: 20px;">
+              <h1 class="text-center" style="color: #359381;">Leaderboard</h1>
+              
+              <!-- Add the tab navigation -->
+              <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="national-tab" data-bs-toggle="tab" data-bs-target="#national-tab-pane" type="button" role="tab" aria-controls="national-tab-pane" aria-selected="true">National</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="friends-tab" data-bs-toggle="tab" data-bs-target="#friends-tab-pane" type="button" role="tab" aria-controls="friends" aria-selected="false">Friends</button>
+                </li>
+              </ul>
+
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="national-tab-pane" role="tabpanel" aria-labelledby="national-tab" tabindex="0">
+                  <div class="scroll">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>Points</th>
+                        </tr>
+                      </thead>
+                      <tbody id="national">
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                </div>
+      
+                <div class="tab-pane fade" id="friends-tab-pane" role="tabpanel" aria-labelledby="friends-tab" tabindex="0">
+                  <!-- Content for the Friends leaderboard goes here -->
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Points</th>
+                      </tr>
+                    </thead>
+                    <tbody id="friends">
+                    </tbody>
+                  </table>
+                </div>
+      
+                
+              </div>
+          </div>
+
+        </div>
+
+      </div>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize ScrollMagic controller
+            var controller = new ScrollMagic.Controller();
+
+            // Create animations using GSAP and add them to ScrollMagic scenes
+            var cardAnimation = gsap.from('.card', { duration: 1, opacity: 0, y: -50, stagger: 0.2 });
+            new ScrollMagic.Scene({
+                triggerElement: '.card',
+                reverse: false
+            })
+            .setTween(cardAnimation)
+            .addTo(controller);
+
+            // Animate the navigation bar
+            // gsap.from('.navbar', { duration: 1, opacity: 0, y: -50 });
+
+            // Animate table rows
+            gsap.from('tr', { duration: 1, opacity: 0, y: 20, stagger: 0.1 });
+
+            // More interactive code can be added here
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+        let prizes = [
+          { rank: 1, prize: '5000 bonus points' },
+          { rank: 2, prize: '2500 bonus points' },
+          { rank: 3, prize: '1000 bonus points' }
+        ];
+
+        let prizes_list = document.getElementById('prizes_list');
+        for (let prize of prizes) {
+          let row = document.createElement('tr');
+          let rank = document.createElement('td');
+          let prizeElement = document.createElement('td');
+          rank.innerText = prize.rank;
+          prizeElement.innerText = prize.prize;
+          row.appendChild(rank);
+          row.appendChild(prizeElement);
+          prizes_list.appendChild(row);
+        }
+      });
+    </script>
+
+      
+        
+
+    <script>
+      let current_user = sessionStorage.getItem('profileID');
+      let bio_data = {};
+      axios.get('api/users.php')
+      .then(resp=>{
+        console.log(resp.data)
+        let users = resp.data
+        users.sort((a,b)=>b.points-a.points)
+        let national = document.getElementById('national')
+        let user_added = false;
+        for (user in users){
+          if (user < 10){
+            let row = document.createElement('tr')
+            let rank = document.createElement('td')
+            let name = document.createElement('td')
+            let points = document.createElement('td')
+            rank.innerText = parseInt(user)+1
+            if (users[user].id == current_user){
+              bio_data = users[user]
+              name.innerText = users[user].name + ' (You)'
+              user_added = true;
+            }else{
+              name.innerText = users[user].name
+            }
+            points.innerText = users[user].points
+            if (user == 0){
+              rank.classList.add('gold')
+              name.classList.add('gold')
+              points.classList.add('gold')
+            }
+            if (user == 1){
+              rank.classList.add('silver')
+              name.classList.add('silver')
+              points.classList.add('silver')
+            }
+            if (user == 2){
+              rank.classList.add('bronze')
+              name.classList.add('bronze')
+              points.classList.add('bronze')
+            }
+            row.appendChild(rank)
+            row.appendChild(name)
+            row.appendChild(points)
+            
+            national.appendChild(row)
+          }
+        }
+        if (!user_added){
+          for (user in users){
+            if (users[user].id == current_user){
+              bio_data = users[user]
+              let row = document.createElement('tr')
+              let rank = document.createElement('td')
+              let name = document.createElement('td')
+              let points = document.createElement('td')
+              rank.innerText = parseInt(user)+1
+              name.innerText = users[user].name + ' (You)'
+              points.innerText = users[user].points
+              row.appendChild(rank)
+              row.appendChild(name)
+              row.appendChild(points)
+              friends.appendChild(row)
+              row.classList.add('table-primary')
+              national.appendChild(row)
+            }
+          }
+        }
+        let url = 'api/friends.php?profileID='; // Need to change to current user
+        url += current_user
+        axios.get(url)
+        .then(resp=>{
+          let friends = resp.data
+          friends.push(bio_data)
+          console.log(friends)
+          friends.sort((a,b)=>b.points-a.points)
+          let friends_list = document.getElementById('friends')
+          let user_added = false;
+          for (friend in friends){
+            console.log(friends[friend])
+            if (friend < 10){
+              let row = document.createElement('tr')
+              let rank = document.createElement('td')
+              let name = document.createElement('td')
+              let points = document.createElement('td')
+              rank.innerText = parseInt(friend)+1
+              if (friends[friend].id == current_user){
+                name.innerText = friends[friend].name + ' (You)'
+                user_added = true;
+              }else{
+                name.innerText = friends[friend].name
+              }
+              points.innerText = friends[friend].points
+              if (friend == 0){
+                rank.classList.add('gold')
+                name.classList.add('gold')
+                points.classList.add('gold')
+              }
+              if (friend == 1){
+                rank.classList.add('silver')
+                name.classList.add('silver')
+                points.classList.add('silver')
+              }
+              if (friend == 2){
+                rank.classList.add('bronze')
+                name.classList.add('bronze')
+                points.classList.add('bronze')
+              }
+              row.appendChild(rank)
+              row.appendChild(name)
+              row.appendChild(points)
+              
+              friends_list.appendChild(row)
+            }
+            
+          }
+          if (!user_added){
+            for (friend in friends){
+              if (friends[friend].id == current_user){
+                let row = document.createElement('tr')
+                let rank = document.createElement('td')
+                let name = document.createElement('td')
+                let points = document.createElement('td')
+                rank.innerText = parseInt(friend)+1
+                name.innerText = friends[friend].name + ' (You)'
+                points.innerText = friends[friend].points
+                row.appendChild(rank)
+                row.appendChild(name)
+                row.appendChild(points)
+                friends.appendChild(row)
+                row.classList.add('table-primary')
+                friends_list.appendChild(row)
+              }
+            }
+          }
+        })
+      })
+      
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+</body>
+</html>
